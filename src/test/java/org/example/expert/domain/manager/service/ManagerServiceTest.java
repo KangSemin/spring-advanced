@@ -40,14 +40,14 @@ class ManagerServiceTest {
     private ManagerService managerService;
 
     @Test
-    public void manager_목록_조회_시_Todo가_없다면_NPE_에러를_던진다() {
+    public void manager_목록_조회_시_Todo가_없다면_IRE_에러를_던진다() {
         // given
         long todoId = 1L;
         given(todoRepository.findById(todoId)).willReturn(Optional.empty());
 
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
-        assertEquals("Manager not found", exception.getMessage());
+        assertEquals("Todo not found", exception.getMessage());
     }
 
     @Test
@@ -91,8 +91,8 @@ class ManagerServiceTest {
 
         // then
         assertEquals(1, managerResponses.size());
-        assertEquals(mockManager.getId(), managerResponses.get(0).getId());
-        assertEquals(mockManager.getUser().getEmail(), managerResponses.get(0).getUser().getEmail());
+        assertEquals(mockManager.getId(), managerResponses.get(0).id());
+        assertEquals(mockManager.getUser().getEmail(), managerResponses.get(0).user().email());
     }
 
     @Test // 테스트코드 샘플
@@ -119,7 +119,7 @@ class ManagerServiceTest {
 
         // then
         assertNotNull(response);
-        assertEquals(managerUser.getId(), response.getUser().getId());
-        assertEquals(managerUser.getEmail(), response.getUser().getEmail());
+        assertEquals(managerUser.getId(), response.getUser().id());
+        assertEquals(managerUser.getEmail(), response.getUser().email());
     }
 }

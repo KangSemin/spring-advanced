@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class CommentService {
 
     private final TodoRepository todoRepository;
@@ -47,7 +46,7 @@ public class CommentService {
     }
 
     public List<CommentResponse> getComments(long todoId) {
-        List<Comment> commentList = commentRepository.findAllByTodoId(todoId);
+        List<Comment> commentList = commentRepository.findAllByTodoIdWithUser(todoId);
 
         List<CommentResponse> dtoList = new ArrayList<>();
         for (Comment comment : commentList) {

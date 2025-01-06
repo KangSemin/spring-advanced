@@ -50,10 +50,12 @@ public class TodoService {
 
     public Page<TodoResponse> getTodos(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
+        return todoRepository.findAllWithDetailsOrderByModifiedAtDesc(pageable)
+                .map(this::toTodoResponse);
+    }
 
-        Page<Todo> todos = todoRepository.findAllByOrderByModifiedAtDesc(pageable);
-
-        return todos.map(todo -> new TodoResponse(
+    private TodoResponse toTodoResponse(Todo todo) {
+        return new TodoResponse(
                 todo.getId(),
                 todo.getTitle(),
                 todo.getContents(),
@@ -61,7 +63,7 @@ public class TodoService {
                 new UserResponse(todo.getUser().getId(), todo.getUser().getEmail()),
                 todo.getCreatedAt(),
                 todo.getModifiedAt()
-        ));
+        );
     }
 
     public TodoResponse getTodo(long todoId) {
